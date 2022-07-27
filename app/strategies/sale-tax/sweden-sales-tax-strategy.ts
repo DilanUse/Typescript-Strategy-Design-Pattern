@@ -1,15 +1,27 @@
 import {ISalesTaxStrategy} from './sales-tax-strategy.interface';
-import {Order} from '../../models/order';
+import {ItemType, Order} from '../../models/order';
 
 export class SwedenSalesTaxStrategy implements ISalesTaxStrategy {
     getTaxFor(order: Order): number {
-        const destination = order.shippingDetails?.destinationCountry?.toLowerCase();
-        const origin = order.shippingDetails?.originCountry?.toLowerCase();
+        let totalTax = 0;
 
-        if (destination == origin) {
-            return order.totalPrice * 0.25;
+        for (const lineItem of order.lineItems) {
+            switch (lineItem[0].itemType) {
+                case ItemType.Food:
+                    totalTax += (lineItem[0].price * 0.06) * lineItem[1];
+                    break;
+
+                case ItemType.Literature:
+                    totalTax += (lineItem[0].price * 0.08) * lineItem[1];
+                    break;
+
+                case ItemType.Service:
+                case ItemType.Hardware:
+                    totalTax += (lineItem[0].price * 0.25) * lineItem[1];
+                    break;
+            }
         }
 
-        return 0;
+        return totalTax;
     }
 }
