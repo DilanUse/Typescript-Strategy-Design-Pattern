@@ -25,12 +25,4 @@ order.lineItems.push([
     1,
 ]);
 
-const destination = order.shippingDetails?.destinationCountry?.toLowerCase();
-
-if (destination === 'sweden') {
-    order.salesTaxStrategy = new SwedenSalesTaxStrategy();
-} else if (destination === 'us') {
-    order.salesTaxStrategy = new UsSalesTaxStrategy();
-}
-
-console.log(order.getTax());
+console.log(order.getTax(new SwedenSalesTaxStrategy()));

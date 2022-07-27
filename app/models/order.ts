@@ -22,9 +22,11 @@ export class Order
 
     public salesTaxStrategy?: ISalesTaxStrategy;
 
-    public getTax(): number
+    public getTax(salesTaxStrategy?: ISalesTaxStrategy): number
     {
-        return this.salesTaxStrategy?.getTaxFor(this) ?? 0;
+        const strategy = salesTaxStrategy ?? this.salesTaxStrategy;
+
+        return strategy?.getTaxFor(this) ?? 0;
     }
 }
 
