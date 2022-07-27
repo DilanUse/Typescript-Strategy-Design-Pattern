@@ -1,12 +1,15 @@
-import {Item, ItemType, Order} from './models/order';
+import {Item, ItemType, Order, Payment, PaymentProvider} from './models/order';
 import {SwedenSalesTaxStrategy} from './strategies/sale-tax/sweden-sales-tax-strategy';
 import {UsSalesTaxStrategy} from './strategies/sale-tax/us-sales-tax-strategy';
+import {FileInvoiceStrategy} from './strategies/invoice/file-invoice-strategy';
+import {EmailInvoiceStrategy} from './strategies/invoice/email-invoice-strategy';
 
 const order = new Order();
 order.shippingDetails = {
     originCountry: "Sweden",
     destinationCountry: "Sweden"
 };
+order.salesTaxStrategy = new SwedenSalesTaxStrategy();
 
 order.lineItems.push([
     new Item(
@@ -16,13 +19,13 @@ order.lineItems.push([
         ItemType.Literature),
     1,
 ]);
-order.lineItems.push([
-    new Item(
-        "CONSULTING",
-        "Building a website",
-        100,
-        ItemType.Service),
-    1,
-]);
 
-console.log(order.getTax(new SwedenSalesTaxStrategy()));
+order.selectedPayments.push(new Payment(
+    PaymentProvider.Invoice,
+))
+
+console.log(order.getTax());
+
+// order.invoiceStrategy = new FileInvoiceStrategy();
+order.invoiceStrategy = new EmailInvoiceStrategy();
+order.finalizeOrder();

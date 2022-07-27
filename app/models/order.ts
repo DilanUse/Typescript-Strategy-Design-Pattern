@@ -1,4 +1,5 @@
 import {ISalesTaxStrategy} from '../strategies/sale-tax/sales-tax-strategy.interface';
+import {IInvoiceStrategy} from '../strategies/invoice/invoice-strategy.interface';
 
 export class Order
 {
@@ -22,11 +23,25 @@ export class Order
 
     public salesTaxStrategy?: ISalesTaxStrategy;
 
+    public invoiceStrategy?: IInvoiceStrategy;
+
     public getTax(salesTaxStrategy?: ISalesTaxStrategy): number
     {
         const strategy = salesTaxStrategy ?? this.salesTaxStrategy;
 
         return strategy?.getTaxFor(this) ?? 0;
+    }
+
+    public finalizeOrder(): void {
+        if (this.selectedPayments.some((payment) => payment.paymentProvider === PaymentProvider.Invoice)
+            && this.amountDue > 0
+            && this.shippingStatus === ShippingStatus.WaitingForPayment
+        ) {
+            this.invoiceStrategy?.generate(this);
+            this.shippingStatus = ShippingStatus.ReadyForShippment;
+        } else if (this.amountDue > 0) {
+            throw new Error('Unable to finalize order');
+        }
     }
 }
 
@@ -65,7 +80,7 @@ export class Payment
     public amount: number;
     public paymentProvider: PaymentProvider;
 
-    public constructor(amount: number, paymentProvider: PaymentProvider) {
+    public constructor(paymentProvider: PaymentProvider, amount: number = 0) {
         this.amount = amount;
         this.paymentProvider = paymentProvider;
     }
