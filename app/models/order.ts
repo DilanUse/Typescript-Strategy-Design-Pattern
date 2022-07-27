@@ -1,3 +1,5 @@
+import {ISalesTaxStrategy} from '../strategies/sale-tax/sales-tax-strategy.interface';
+
 export class Order
 {
     public readonly lineItems: [Item, number][] = [];
@@ -18,57 +20,11 @@ export class Order
 
     public shippingDetails?: ShippingDetails;
 
+    public salesTaxStrategy?: ISalesTaxStrategy;
+
     public getTax(): number
     {
-        const destination = this.shippingDetails?.destinationCountry?.toLowerCase();
-
-        if(destination == "sweden")
-        {
-            if (destination == this.shippingDetails?.originCountry?.toLowerCase())
-            {
-                return this.totalPrice * 0.25;
-            }
-
-            //if (destination == ShippingDetails.OriginCountry.ToLowerInvariant())
-            //{
-            //    decimal totalTax = 0m;
-            //    foreach (var item in LineItems)
-            //    {
-            //        switch (item.Key.ItemType)
-            //        {
-            //            case ItemType.Food:
-            //                totalTax += (item.Key.Price * 0.06m) * item.Value;
-            //                break;
-
-            //            case ItemType.Literature:
-            //                totalTax += (item.Key.Price * 0.08m) * item.Value;
-            //                break;
-
-            //            case ItemType.Service:
-            //            case ItemType.Hardware:
-            //                totalTax += (item.Key.Price * 0.25m) * item.Value;
-            //                break;
-            //        }
-            //    }
-
-            //    return totalTax;
-            //}
-
-            return 0;
-        }
-
-        if (destination == "us")
-        {
-            switch (this.shippingDetails?.destinationState?.toLowerCase())
-            {
-                case "la": return this.totalPrice * 0.095;
-                case "ny": return this.totalPrice * 0.04;
-                case "nyc": return this.totalPrice * 0.045;
-                default: return 0;
-            }
-        }
-
-        return 0;
+        return this.salesTaxStrategy?.getTaxFor(this) ?? 0;
     }
 }
 

@@ -1,4 +1,6 @@
 import {Item, ItemType, Order} from './models/order';
+import {SwedenSalesTaxStrategy} from './strategies/sale-tax/sweden-sales-tax-strategy';
+import {UsSalesTaxStrategy} from './strategies/sale-tax/us-sales-tax-strategy';
 
 const order = new Order();
 order.shippingDetails = {
@@ -22,5 +24,13 @@ order.lineItems.push([
         ItemType.Service),
     1,
 ]);
+
+const destination = order.shippingDetails?.destinationCountry?.toLowerCase();
+
+if (destination === 'sweden') {
+    order.salesTaxStrategy = new SwedenSalesTaxStrategy();
+} else if (destination === 'us') {
+    order.salesTaxStrategy = new UsSalesTaxStrategy();
+}
 
 console.log(order.getTax());
