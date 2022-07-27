@@ -1,0 +1,32 @@
+{
+  "name": "typescript-strategy-design-pattern",
+  "version": "1.0.0",
+  "description": "This is the repository for my code-kata from the Pluralsight course [*C# 8 Design Patterns: Strategy*](https://app.pluralsight.com/library/courses/c-sharp-design-patterns-strategy)",
+  "main": "js/app/app.js",
+  "scripts": {
+    "comp": "tsc",
+    "comp:watch": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:watch-all": "jest --watchAll",
+    "start": "node js/app/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DilanUse/Typescript-Strategy-Design-Pattern.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DilanUse/Typescript-Strategy-Design-Pattern/issues"
+  },
+  "homepage": "https://github.com/DilanUse/Typescript-Strategy-Design-Pattern#readme",
+  "devDependencies": {
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.6.1",
+    "jest": "^28.1.3",
+    "ts-jest": "^28.0.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
+}
