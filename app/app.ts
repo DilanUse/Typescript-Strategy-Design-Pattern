@@ -3,13 +3,16 @@ import {SwedenSalesTaxStrategy} from './strategies/sale-tax/sweden-sales-tax-str
 import {UsSalesTaxStrategy} from './strategies/sale-tax/us-sales-tax-strategy';
 import {FileInvoiceStrategy} from './strategies/invoice/file-invoice-strategy';
 import {EmailInvoiceStrategy} from './strategies/invoice/email-invoice-strategy';
+import {SwedishPostalServiceStrategy} from './strategies/shipping/swedish-postal-service-strategy';
 
+// Todo: take from user input to leverage strategies in run-time
 const order = new Order();
 order.shippingDetails = {
     originCountry: "Sweden",
     destinationCountry: "Sweden"
 };
 order.salesTaxStrategy = new SwedenSalesTaxStrategy();
+order.shippingStrategy = new SwedishPostalServiceStrategy();
 
 order.lineItems.push([
     new Item(

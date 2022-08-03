@@ -1,5 +1,6 @@
 import {ISalesTaxStrategy} from '../strategies/sale-tax/sales-tax-strategy.interface';
 import {IInvoiceStrategy} from '../strategies/invoice/invoice-strategy.interface';
+import {IShippingStrategy} from '../strategies/shipping/shipping-strategy.interface';
 
 export class Order
 {
@@ -25,6 +26,8 @@ export class Order
 
     public invoiceStrategy?: IInvoiceStrategy;
 
+    public shippingStrategy?: IShippingStrategy;
+
     public getTax(salesTaxStrategy?: ISalesTaxStrategy): number
     {
         const strategy = salesTaxStrategy ?? this.salesTaxStrategy;
@@ -42,6 +45,8 @@ export class Order
         } else if (this.amountDue > 0) {
             throw new Error('Unable to finalize order');
         }
+
+        this.shippingStrategy?.ship(this);
     }
 }
 
